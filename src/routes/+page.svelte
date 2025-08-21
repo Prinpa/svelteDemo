@@ -1,11 +1,8 @@
 <script lang='ts'>
-	import type { derived } from "svelte/store";
-
-    // could be using a 2d array to be storing the options,
-    //  one as the outwads facing text and the other as the dev eyes one,
-    //  but considering this appraoch is checking the value and doing somehting, i see no point overcomplicating that
-    let agent: string = $state("") ;
-    let agentOptions = ["Agent 1", "Agent 2"]
+    import "../styles.css"
+    // Agent options with display names
+    let agent: string = $state("Emily") ;
+    let agentOptions = ["Emily Lead Gen", "Emily", "Tille", "Emily Shopbot"]
     
     let embedType: string = $state("") ;
     let embedTypeOptions = ["Popup", "Inline"]
@@ -26,10 +23,8 @@
     let welcomeScreenOptions = ["On", "Off"] 
 
     let embedCode = $derived(agent + embedType + chatbotHeight + chatbotWidth + agentSwarm + quickLinks + welcomeScreen);
+
     
-    function updateAgent(value: string) {
-        agent = value;
-    }
     function updateEmbedType(value: string) {
         embedType = value;
     }
@@ -55,54 +50,109 @@
 
 </script>
 
-<h1> Deploy</h1>
+<div class="container">
+    <h1>DEPLOY</h1>
 
-<div>
-    <span>Ai Agent</span> 
-    <select bind:value={agent} >
-    {#each agentOptions as option}
-        <option onclick={() => updateAgent(option)}> {option} </option>
-    {/each}
-    </select>
-</div>
-<div>
-    <span>Embed type</span> 
-    {#each embedTypeOptions as option}
-        <button onclick={() => updateEmbedType(option)}> {option} </button>
-    {/each}
-</div>
-<div>
-    <span>Chatbot height</span> 
-    {#each chatbotHeightOptions as option}
-        <button onclick={() => updateChatbotHeight(option)}> {option} </button>
-    {/each}
-</div>
-<div>
-    <span>Chatbot width</span> 
-    {#each chatbotWidthOptions as option}
-        <button onclick={() => updateChatbotWidth(option)}> {option} </button>
-    {/each}
-</div>
-<div>
-    <span>Agent swarm</span> 
-    {#each agentSwarmOptions as option}
-        <button onclick={() => updateAgentSwarm(option)}> {option} </button>
-    {/each}
-</div>
-<div>
-    <span>Quick Links</span> 
-    {#each quickLinksOptions as option}
-        <button onclick={() => updateQuickLinks(option)}> {option} </button>
-    {/each}
-</div>
-<div>
-    <span>Welcome Screen</span> 
-    {#each welcomeScreenOptions as option}
-        <button onclick={() => updateWelcomeScreen(option)}> {option} </button>
-    {/each}
-</div>
+    <div class="config-section">
+        <div class="field">
+            <label for={agent}>AI Agent</label>
+            <div class="select-wrapper">
+                <select bind:value={agent} name={agent}>
+                    {#each agentOptions as option}
+                        <option value={option}>{option}</option>
+                    {/each}
+                </select>
+            </div>
+        </div>
 
+        <div class="field">
+            <div>Embed Type</div>
+            <div class="button-group">
+                {#each embedTypeOptions as option}
+                    <button 
+                        class:active={embedType === option}
+                        onclick={() => updateEmbedType(option)}
+                    >
+                        {option}
+                    </button>
+                {/each}
+            </div>
+        </div>
 
-<div>
-    <textarea name="EmbedCode">{embedCode}</textarea>
+        <div class="field">
+            <div>Chatbot Height</div>
+            <div class="button-group">
+                {#each chatbotHeightOptions as option}
+                    <button 
+                        class:active={chatbotHeight === option}
+                        onclick={() => updateChatbotHeight(option)}
+                    >
+                        {option}
+                    </button>
+                {/each}
+            </div>
+        </div>
+
+        <div class="field">
+            <div>Chatbot Width</div>
+            <div class="button-group">
+                {#each chatbotWidthOptions as option}
+                    <button 
+                        class:active={chatbotWidth === option}
+                        onclick={() => updateChatbotWidth(option)}
+                    >
+                        {option}
+                    </button>
+                {/each}
+            </div>
+        </div>
+
+        <div class="field">
+            <div>Agent Swarm</div>
+            <div class="button-group">
+                {#each agentSwarmOptions as option}
+                    <button 
+                        class:active={agentSwarm === option}
+                        onclick={() => updateAgentSwarm(option)}
+                    >
+                        {option}
+                    </button>
+                {/each}
+            </div>
+        </div>
+
+        <div class="field">
+            <div>Quick Links</div>
+            <div class="button-group">
+                {#each quickLinksOptions as option}
+                    <button 
+                        class:active={quickLinks === option}
+                        onclick={() => updateQuickLinks(option)}
+                    >
+                        {option}
+                    </button>
+                {/each}
+            </div>
+        </div>
+
+        <div class="field">
+            <div>Welcome Screen</div>
+            <div class="button-group">
+                {#each welcomeScreenOptions as option}
+                    <button 
+                        class:active={welcomeScreen === option}
+                        onclick={() => updateWelcomeScreen(option)}
+                    >
+                        {option}
+                    </button>
+                {/each}
+            </div>
+        </div>
+    </div>
+
+    <div class="embed-code-section">
+        <div>Embed Code</div>
+        <textarea readonly>{embedCode}</textarea>
+        <button class="copy-button">COPY EMBED CODE</button>
+    </div>
 </div>
