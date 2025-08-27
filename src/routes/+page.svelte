@@ -1,153 +1,88 @@
 <script lang='ts'>
     import "../styles.css"
-    // Agent options with display names
-    let agent: string = $state("Emily") ;
-    let agentOptions = ["Emily Lead Gen", "Emily", "Tille", "Emily Shopbot"]
-    
-    let embedType: string = $state("") ;
-    let embedTypeOptions = ["Popup", "Inline"]
+    import { minify } from "terser"
 
-    let chatbotHeight: string = $state("") ;
-    let chatbotHeightOptions = ["Min", "Mid" , "Max"]
+    /* 
+    Left to do
+    - Have the agent names be pulled from another place on the site, maybe with playwright? 
+    - find out the actual difference between the embed types and implement something around that
+    - was it meant to be server or client side rendered? I really should start taking notes
+    - make copy button actually copy to clipboard
+    - look into minify or anothing like library to do what i need
+    */
 
-    let chatbotWidth: string = $state("") ;
-    let chatbotWidthOptions = ["Min", "Mid" , "Max"]
 
-    let agentSwarm: string = $state("") ;
-    let agentSwarmOptions = ["On", "Off"] 
+    /* 
+    Structure of the array
+    User facing name | User facing options in array | name used in the code | values of each option | selection type   
+    */
+    let optionsArray = [
+        ["Ai agent", ["Emily Lead Gen", "Emily", "Tille", "Emily Shopbot"], "agent", ["Emily_Lead_Gen", "Emily", "Tille", "Emily_Shopbot"], "dropdown"],
+        ["Embed type", ["Popup", "Inline"], "embedType", ["Popup", "Inline"], "buttons"],
+        ["Chatbot height", ["Min", "Mid" , "Max"], "height", ["200px", "300px", "400px"], "buttons"],
+        ["Chatbot width", ["Min", "Mid" , "Max"], "width", ["200px", "300px", "400px"], "buttons"],
+        ["Agent Swarm", ["On", "Off"], "swarm", ["true", ""], "buttons"],
+        ["Quick Links", ["On", "Off"], "quickLinks", ["true", ""], "buttons"],
+        ["Welcome Screen", ["On", "Off"], "welcomeScreen", ["true", ""], "buttons"],
 
-    let quickLinks: string = $state("") ;
-    let quickLinksOptions = ["On", "Off"]
+    ];
+    // State object to track selections for each option
+    let selections: Record<string, string> = $state({});
+    function updateSelection(optionName: string, value: string) {
 
-    let welcomeScreen: string = $state("") ;
-    let welcomeScreenOptions = ["On", "Off"] 
+        selections[optionName] = value;
+    }
 
-    let embedCode = $derived(agent + embedType + chatbotHeight + chatbotWidth + agentSwarm + quickLinks + welcomeScreen);
+    let embedCode = $derived.by(() => {
+        let code = `(function(){
+            const e=document.createElement("iframe");
+            src="https://chat.moble.io/embed/?config=galuku&amp;`;
 
-    
-    function updateEmbedType(value: string) {
-        embedType = value;
-    }
-    function updateChatbotHeight(value: string) {
-        chatbotHeight = value;
-    }
-    function updateChatbotWidth(value: string) {
-        chatbotWidth = value;
-    }
-    function updateAgentSwarm(value: string) {
-        agentSwarm = value;
-    }
-    function updateQuickLinks(value: string) {
-        quickLinks = value;
-    }
-    function updateWelcomeScreen(value: string) {
-        welcomeScreen = value;
-    }
-    function updateEmbedCode(value: string) {
-        // Use the values of the the other variables to determine the values of the embed code 
-        // e.g if cahtbotheight === "Min" 
-    }
+        // Add height if selected
+        
+        Object.entries(selections).forEach(([key, value]) => {
+            code += `${key}=${value};`;
+        });
+        return code;
+    });
+
 
 </script>
 
 <div class="container">
     <h1>DEPLOY</h1>
-
     <div class="config-section">
-        <div class="field">
-            <label for={agent}>AI Agent</label>
-            <div class="select-wrapper">
-                <select bind:value={agent} name={agent}>
-                    {#each agentOptions as option}
-                        <option value={option}>{option}</option>
-                    {/each}
-                </select>
-            </div>
-        </div>
-
-        <div class="field">
-            <div>Embed Type</div>
-            <div class="button-group">
-                {#each embedTypeOptions as option}
-                    <button 
-                        class:active={embedType === option}
-                        onclick={() => updateEmbedType(option)}
-                    >
-                        {option}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <div class="field">
-            <div>Chatbot Height</div>
-            <div class="button-group">
-                {#each chatbotHeightOptions as option}
-                    <button 
-                        class:active={chatbotHeight === option}
-                        onclick={() => updateChatbotHeight(option)}
-                    >
-                        {option}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <div class="field">
-            <div>Chatbot Width</div>
-            <div class="button-group">
-                {#each chatbotWidthOptions as option}
-                    <button 
-                        class:active={chatbotWidth === option}
-                        onclick={() => updateChatbotWidth(option)}
-                    >
-                        {option}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <div class="field">
-            <div>Agent Swarm</div>
-            <div class="button-group">
-                {#each agentSwarmOptions as option}
-                    <button 
-                        class:active={agentSwarm === option}
-                        onclick={() => updateAgentSwarm(option)}
-                    >
-                        {option}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <div class="field">
-            <div>Quick Links</div>
-            <div class="button-group">
-                {#each quickLinksOptions as option}
-                    <button 
-                        class:active={quickLinks === option}
-                        onclick={() => updateQuickLinks(option)}
-                    >
-                        {option}
-                    </button>
-                {/each}
-            </div>
-        </div>
-
-        <div class="field">
-            <div>Welcome Screen</div>
-            <div class="button-group">
-                {#each welcomeScreenOptions as option}
-                    <button 
-                        class:active={welcomeScreen === option}
-                        onclick={() => updateWelcomeScreen(option)}
-                    >
-                        {option}
-                    </button>
-                {/each}
-            </div>
-        </div>
+        {#each optionsArray as line}
+            <!-- if it should be a row of buttons -->
+            {#if line[4] === "buttons"}
+                <div class="field">
+                    <div>{line[0]}</div>
+                    <div class="button-group">
+                        {#each line[1] as option, index}
+                            <button 
+                                onclick={() => updateSelection(line[2], line[3][index])}
+                            >
+                                {option}
+                            </button>
+                        {/each}
+                    </div>
+                </div>
+            <!-- if it should be a dropdown -->
+            {:else if line[4] === "dropdown"}
+                <div class="field">
+                    <div>{line[0]}</div>
+                    <div class="select-wrapper">
+                        <select onchange={(e) =>updateSelection(line[2], e.target?.value)}>
+                            <option value="inital" disabled selected>Please select one</option>
+                            {#each line[1] as option, index}
+                                <option
+                                     value={line[3][index]}>{option} </option>
+                            {/each}
+                        </select>
+                    </div>
+                </div>
+            {/if}
+        {/each}
     </div>
 
     <div class="embed-code-section">
