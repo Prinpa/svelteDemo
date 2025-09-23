@@ -1,46 +1,5 @@
-
-<script lang='ts'>
-    import "../styles.css"
-    import { minify } from "terser"
-    import {settings} from "../info.json";
-	import { generateEmbedCode } from "../embedCodeGenerator";
-	import { onMount } from "svelte";
-
-
-    /* 
-    Left to do
-    - Have the agent names be pulled from another place on the site, maybe with playwright? 
-
-    - look into minify or anothing like library to do what i need
-
-    colour inputs maybe next week
-
-    make a second repo with the embed
-
-    chatbox input container ??
-    */
-
-
-    // State object to track selections for each option
-    let selections: Record<string, string> = $state({});
-
-    onMount(() => {
-        // populate selections
-        settings.forEach(setting => {
-            selections[setting.key] = setting.values[0];
-        });
-
-    })
-    function updateSelection(optionName: string, value: string) {
-
-        selections[optionName] = value;
-    }
-
-    let embedCode = $derived.by(() => {
-        return generateEmbedCode(selections);;
-    });
-
-    
+export function generateEmbedCode(selection: Record<string, string>) {
+ let code =  `
         (function(){    
         const c = (t: any, s: any, a = {}) => {
             const e = document.createElement(t);
@@ -104,8 +63,8 @@
             position: "fixed",
             bottom: isMobile() ? "0" : "140px",
             right: isMobile() ? "0" : "15px",
-            width: isMobile() ? "100%" : "600px",
-            height: isMobile() ? "100%" : "600px",
+            width: isMobile() ? "100%" : "${selection["width"]}",
+            height: isMobile() ? "100%" : "${selection["height"]}",
             backgroundColor: "white",
             borderRadius: isMobile() ? "0" : "10px",
             boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
@@ -119,7 +78,7 @@
             height: "100%",
             border: "none"
         }, {
-            src: "https://chat.moble.io/embed/?config=galuku&shadow=0&height=" + (window.innerHeight - 160) + "px&border_round=1&include_personas=1&persona=&include_buttons=&use_voice=&v=1001",
+            src: "https://chat.moble.io/embed/?config=galuku&shadow=0&border_round=1&include_personas=1&persona=&include_buttons=&use_voice=&v=1001",
             frameBorder: "0",
             allowFullscreen: "true"
         });
@@ -154,10 +113,10 @@
 
         function u() {
             const e = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16,
-                n = "600px";
+                n = "${selection["width"]}";
             w.style.width = n;
             f.width = n.slice(0, -2);
-            var s = f.src.replace(/width=d+px/, "width=" + n);
+            var s = f.src.replace(/width=\d+px/, "width=" + n);
             f.src = s;
         }
         u();
@@ -178,8 +137,8 @@
             } else {
                 w.style.bottom = "140px";
                 w.style.right = "15px";
-                w.style.width = "600px";
-                w.style.height = "600px";
+                w.style.width = "${selection["width"]}";
+                w.style.height = "${selection["height"]}";
                 w.style.borderRadius = "10px";
             }
         }});
@@ -218,57 +177,11 @@
         });
 
         const s = document.createElement("style");
-        s.textContent = `
+        s.textContent = \`
             @keyframes botgradient{0%{background-position:0% 50%}100%{background-position:100% 50%}}
-        `;
+        \`;
         document.head.appendChild(s);
 
-    })()
-    </script>
-
-
-
-<div class="container">
-    <h1>DEPLOY</h1>
-    <div class="config-section">
-        {#each settings as setting}
-            <!-- if it should be a row of buttons -->
-            {#if setting.type === "buttons"}
-                <div class="field">
-                    <div>{setting.label}</div>
-                    <div class="button-group">
-                        {#each setting.options as option, index}
-                            <button 
-                                onclick={() => (updateSelection(setting.key, setting.values[index]), console.log(window.innerHeight))}
-                               class='{(selections[setting.key] == setting.values[index]) ? "active" : ""}'
-                            >
-                                {option}
-                            </button>
-                        {/each}
-                    </div>
-                </div>
-            <!-- if it should be a dropdown -->
-            {:else if setting.type === "dropdown"}
-                <div class="field">
-                    <div>{setting.label}</div>
-                    <div class="select-wrapper">
-                        <select onchange={(e) => updateSelection(setting.key, (<HTMLTextAreaElement>e.target).value)}>
-                            <option value="initial" disabled selected>Please select one</option>
-                            {#each setting.options as option, index}
-                                <option value={setting.values[index]}>
-                                    {option}
-                                </option>
-                            {/each}
-                        </select>
-                    </div>
-                </div>
-            {/if}
-        {/each}
-    </div>
-
-    <div class="embed-code-section">
-        <div>Embed Code</div>
-        <textarea class="height:2000px" readonly >{embedCode}</textarea>
-        <button class="copy-button " onclick={() => {navigator.clipboard.writeText(embedCode);}}>COPY EMBED CODE</button>
-    </div>
-</div>
+    })()`;
+    return code;
+}

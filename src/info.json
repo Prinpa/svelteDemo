@@ -1,0 +1,53 @@
+{
+    "settings": [
+        {
+            "label": "Ai agent",
+            "options": ["Emily Lead Gen", "Emily", "Tille", "Emily Shopbot"],
+            "key": "agent", 
+            "values": ["Emily_Lead_Gen", "Emily", "Tille", "Emily_Shopbot"],
+            "type": "dropdown"
+        },
+        {
+            "label": "Embed type",
+            "options": ["Popup", "Inline"],
+            "key": "embedType",
+            "values": ["Popup", "Inline"],
+            "type": "buttons"
+        },
+        {
+            "label": "Chatbot height",
+            "options": ["Min", "Mid", "Max"],
+            "key": "height", 
+            "values": ["400px", "500px", "600px"],
+            "type": "buttons"
+        },
+        {
+            "label": "Chatbot width",
+            "options": ["Min", "Mid", "Max"],
+            "key": "width",
+            "values": ["400px", "500px", "600px"],
+            "type": "buttons"
+        },
+        {
+            "label": "Agent Swarm",
+            "options": ["On", "Off"],
+            "key": "swarm",
+            "values": ["true", ""],
+            "type": "buttons"
+        },
+        {
+            "label": "Quick Links",
+            "options": ["On", "Off"],
+            "key": "quickLinks",
+            "values": ["true", ""],
+            "type": "buttons"
+        },
+        {
+            "label": "Welcome Screen",
+            "options": ["On", "Off"],
+            "key": "welcomeScreen",
+            "values": ["true", ""],
+            "type": "buttons"
+        }
+    ]
+}
