@@ -25,6 +25,7 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"@eastdesire/jscolor": "^2.5.2",
 		"terser": "^5.43.1"
 	}
 }

@@ -8,7 +8,10 @@ export function generateEmbedCode(selection: Record<string, string>) {
             return e
         };
         const isMobile = () => window.innerWidth <= 768;
-
+        function calculateEmbedLink(): string {
+            let height = isMobile() ? "89vh": "442px"
+            return \`https://chat.moble.io/embed/?config=galuku&shadow=0&border_round=1&height=\${height}&include_personas=1&persona=&include_buttons=&use_voice=&v=1001\`
+        }
         const b = c("div", {
             position: "fixed",
             bottom: "40px",
@@ -75,10 +78,10 @@ export function generateEmbedCode(selection: Record<string, string>) {
 
         const f = c("iframe", {
             width: "100%",
-            height: "100%",
+            height: "100vh",
             border: "none"
         }, {
-            src: "https://chat.moble.io/embed/?config=galuku&shadow=0&border_round=1&include_personas=1&persona=&include_buttons=&use_voice=&v=1001",
+            src: calculateEmbedLink(),
             frameBorder: "0",
             allowFullscreen: "true"
         });
@@ -128,6 +131,7 @@ export function generateEmbedCode(selection: Record<string, string>) {
         }, 2000);
         window.addEventListener('resize', () => {
         if (w.style.display === "block") {
+            f.src = calculateEmbedLink();
             if (isMobile()) {
                 w.style.bottom = "0";
                 w.style.right = "0";

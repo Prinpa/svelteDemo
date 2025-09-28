@@ -48,6 +48,34 @@
             "key": "welcomeScreen",
             "values": ["true", ""],
             "type": "buttons"
+        },
+        {
+            "label": "Color 1",
+            "options": [],
+            "key": "color1",
+            "values": [],
+            "type": "colorPicker"
+        },
+        {
+            "label": "Color 2",
+            "options": [],
+            "key": "color2",
+            "values": [],
+            "type": "colorPicker"
+        },
+        {
+            "label": "Color 3",
+            "options": [],
+            "key": "color3",
+            "values": [],
+            "type": "colorPicker"
+        },
+        {
+            "label": "Color 4",
+            "options": [],
+            "key": "color4",
+            "values": [],
+            "type": "colorPicker"
         }
     ]
 }
