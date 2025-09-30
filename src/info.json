@@ -50,31 +50,38 @@
             "type": "buttons"
         },
         {
+            "label": "background_color",
+            "options": [],
+            "key": "background_color",
+            "values": ["#f6f5f4"],
+            "type": "colorPicker"
+        },
+        {
             "label": "Color 1",
             "options": [],
             "key": "color1",
-            "values": [],
+            "values": ["#57e389"],
             "type": "colorPicker"
         },
         {
             "label": "Color 2",
             "options": [],
             "key": "color2",
-            "values": [],
+            "values": ["#000000"],
             "type": "colorPicker"
         },
         {
             "label": "Color 3",
             "options": [],
             "key": "color3",
-            "values": [],
+            "values": ["#e66465"],
             "type": "colorPicker"
         },
         {
             "label": "Color 4",
             "options": [],
             "key": "color4",
-            "values": [],
+            "values": ["#986a44"],
             "type": "colorPicker"
         }
     ]

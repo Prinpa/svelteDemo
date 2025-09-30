@@ -1,5 +1,12 @@
 export function generateEmbedCode(selection: Record<string, string>) {
- let code =  `
+    let background_color = selection['background_color'].replace('#', '%23')
+    let color_1 = selection['color1'].replace('#', '%23')
+    let color_2 = selection['color2'].replace('#', '%23')
+    let color_3 = selection['color3'].replace('#', '%23')
+    let color_4 = selection['color4'].replace('#', '%23')
+
+ 
+    let code =  `
         (function(){    
         const c = (t: any, s: any, a = {}) => {
             const e = document.createElement(t);
@@ -9,8 +16,14 @@ export function generateEmbedCode(selection: Record<string, string>) {
         };
         const isMobile = () => window.innerWidth <= 768;
         function calculateEmbedLink(): string {
-            let height = isMobile() ? "89vh": "442px"
-            return \`https://chat.moble.io/embed/?config=galuku&shadow=0&border_round=1&height=\${height}&include_personas=1&persona=&include_buttons=&use_voice=&v=1001\`
+            let url = "https://chat.moble.io/embed/?config=galuku&shadow=0&border_round=1";
+            url += "&height=\${isMobile() ? '89vh': '${parseInt(selection["height"].slice(0, -2)) - 158}'}";
+            url += "&background_color=${background_color}";
+            url += "&color_1=${color_1}&input_background_color=${color_1}&question_background_color=${color_1}";
+            url += "&color_2=${color_2}&input_color=${color_2}&placeholder_color=${color_2}&question_color=${color_2}&action_2_background_color_1=${color_2}&action_2_background_color_2=${color_2}&action_1_background_color_1=${color_2}&action_1_background_color_2=${color_2}&answer_background_color=${color_2}"
+            url += "&color_3=${color_3}&button_border_color=${color_3}&button_background_color=${color_3}"
+            url += "&color_4=${color_4}"
+            return url
         }
         const b = c("div", {
             position: "fixed",
